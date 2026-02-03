@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BBB 26 E FREE</title>
+
+<style>
+body {
+    margin: 0;
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+#site-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #ff9800;
+}
+
+#player-container {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    background: #111;
+    border: 2px solid #ff9800;
+    padding: 10px;
+}
+
+#channel-name {
+    text-align: left;
+    font-size: 18px;
+    color: #ccc;
+    margin-bottom: 5px;
+}
+
+#player-area {
+    width: 100%;
+    height: 240px;
+    background: #000;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#initial-text, #option-text {
+    font-size: 20px;
+    color: #ccc;
+}
+
+.player-options {
+    display: none;
+    margin-top: 10px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.player-options button {
+    flex: 1 1 calc(33.333% - 10px);
+    padding: 10px;
+    background: #222;
+    color: #fff;
+    border: 1px solid #ff9800;
+    cursor: pointer;
+}
+
+.player-options button.active {
+    background: #b00000;
+}
+
+#channels {
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.category-title {
+    background: #ff9800;
+    padding: 12px;
+    margin: 30px 0 15px 0;
+    font-weight: bold;
+    text-align: center;
+    color: #000;
+}
+
+.channel {
+    background: #111;
+    border: 1px solid #ff9800;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.channel.active {
+    background: #b00000;
+    font-weight: bold;
+}
+
+.unavailable {
+    color: #ff4444;
+    font-weight: bold;
+}
+
+#initial-warning,
+#ad-warning {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0,0,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.warning-box {
+    border: 2px solid #ff9800;
+    padding: 15px;
+    max-width: 500px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+#ad-warning {
+    display: none;
+}
+
+.warning-box p {
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.warning-box button {
+    padding: 10px 20px;
+    background: #b00000;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+#footer-note {
+    max-width: 900px;
+    margin: 50px auto 20px auto;
+    text-align: center;
+    color: #aaa;
+    font-size: 14px;
+    background-color: #444;
+    padding: 10px 0;
+    border-radius: 4px;
+}
+</style>
+
+<!-- HLS.JS -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body>
+
+<div id="site-title">BBB 26 É FREE</div>
+
+<div id="initial-warning">
+    <div class="warning-box">
+        <p>⚠️ AVISO ⚠️<br><br>
+        Este site está em fase de testes, podendo apresentar erros ou instabilidade.<br><br>
+        Vale ressaltar também que não somos responsáveis por criar/hospedar nenhum conteúdo.
+        A fonte dos canais é disponibilizada por terceiros.</p>
+        <button onclick="closeInitialWarning()">Fechar mensagem</button>
+    </div>
+</div>
+
+<div id="ad-warning">
+    <div class="warning-box">
+        <p>⚠️ SOBRE OS ANÚNCIOS ⚠️<br><br>
+        Este site, assim como todos os outros, possuem anúncios que são necessários para manter o site online.<br><br>
+        Mas não se preocupe. Se aparecer um anúncio ou um pop-up que te leve para outra página, basta clicar em voltar para retornar ao site.</p>
+        <button onclick="document.getElementById('ad-warning').style.display='none'">Fechar mensagem</button>
+    </div>
+</div>
+
+<div id="player-container">
+    <div id="channel-name"></div>
+    <div id="player-area">
+        <span id="initial-text">Selecione um canal</span>
+    </div>
+
+    <div class="player-options" id="player-buttons">
+        <button onclick="loadPlayer(0)">Opção 1</button>
+        <button onclick="loadPlayer(1)">Opção 2</button>
+    </div>
+</div>
+
+<div id="channels"></div>
+
+<div id="footer-note">
+    © 2026 BBB 26 É FREE. Todos os direitos reservados.
+</div>
+
+<script>
+const canais = [
+    {
+        nome: "BBB 26 - CÂMERAS AO VIVO",
+        canais: [
+            { nome: "(▶) 🏠 ACOMPANHE A CASA 1", streams: [[ "http://cdn4k.club:80/live/71717190/90717171/256344.m3u8", "http://cdn4k.club:80/live/71717190/90717171/256344.m3u8", "http://cdn4k.club:80/live/71717190/90717171/256344.m3u8" ], [ "http://cdn4k.club:80/live/71717190/90717171/256345.m3u8", "http://cdn4k.club:80/live/71717190/90717171/256345.m3u8", "http://cdn4k.club:80/live/71717190/90717171/256345.m3u8" ]] },
+            { nome: "(▶) 🏡 ACOMPANHE A CASA 2", streams: [[ "http://cdn4k.club:80/live/71717190/90717171/256346.m3u8", "http://cdn4k.club:80/live/71717190/90717171/256346.m3u8", "http://cdn4k.club:80/live/71717190/90717171/256346.m3u8" ], [ "http://cdn4k.club:80/live/71717190/90717171/256347.m3u8", "http://cdn4k.club:80/live/71717190/90717171/256347.m3u8", "http://cdn4k.club:80/live/71717190/90717171/256347.m3u8" ]] },
+            { nome: "(▶) 🖼️ MOSAICO", streams: [[ "", "", "" ], [ "", "", "" ]] },
+            { nome: "(▶) 🛏️ QUARTO SONHO DE ETERNIDADE", streams: [[ "", "", "" ], [ "", "", "" ]] },
+            { nome: "(▶) 🛏️ QUARTO SONHO DE VOAR", streams: [[ "", "", "" ], [ "", "", "" ]] },
+            { nome: "(▶) 🛏️ QUARTO SONHO DO GRANDE AMOR", streams: [[ "", "", "" ], [ "", "", "" ]] },
+            { nome: "(▶) 🛋️ SALA", streams: [[ "", "", "" ], [ "", "", "" ]] },
+            { nome: "(▶) 🍽️ COZINHA", streams: [[ "", "", "" ], [ "", "", "" ]] },
+            { nome: "(▶) 🚽 BANHEIRO", streams: [[ "", "", "" ], [ "", "", "" ]] },
+            { nome: "(▶) 🏋️ ACADEMIA", streams: [[ "", "", "" ], [ "", "", "" ]] }
+        ]
+    }
+];
+
+function closeInitialWarning() {
+    document.getElementById('initial-warning').style.display = 'none';
+    document.getElementById('ad-warning').style.display = 'flex';
+}
+
+let currentStreams = [];
+let firstSelection = true;
+
+const playerArea = document.getElementById("player-area");
+const playerButtons = document.getElementById("player-buttons");
+const buttons = playerButtons.querySelectorAll("button");
+const channelsDiv = document.getElementById("channels");
+const channelNameDiv = document.getElementById("channel-name");
+
+canais.forEach(categoria => {
+    const title = document.createElement("div");
+    title.className = "category-title";
+    title.textContent = categoria.nome;
+    channelsDiv.appendChild(title);
+
+    categoria.canais.forEach(channel => {
+        const div = document.createElement("div");
+        div.className = "channel";
+        div.textContent = channel.nome;
+
+        div.onclick = () => {
+            currentStreams = channel.streams;
+
+            document.querySelectorAll(".channel").forEach(c => c.classList.remove("active"));
+            div.classList.add("active");
+
+            channelNameDiv.textContent = channel.nome;
+
+            if (firstSelection) {
+                document.getElementById("initial-text").remove();
+                firstSelection = false;
+            }
+
+            playerArea.innerHTML = `<span id="option-text">Escolha uma opção abaixo</span>`;
+            playerButtons.style.display = "flex";
+            buttons.forEach(b => b.classList.remove("active"));
+
+            document.getElementById("player-container")
+                .scrollIntoView({ behavior: "smooth" });
+        };
+
+        channelsDiv.appendChild(div);
+    });
+});
+
+function loadPlayer(opt) {
+    buttons.forEach(b => b.classList.remove("active"));
+    buttons[opt].classList.add("active");
+
+    const list = currentStreams[opt];
+    if (!list || !list.length) {
+        playerArea.innerHTML = `<span class="unavailable">Opção indisponível no momento</span>`;
+        return;
+    }
+
+    let index = 0;
+    let hls = null;
+    let lastTime = 0;
+    let stallChecks = 0;
+
+    playerArea.innerHTML = `
+        <video id="video" controls autoplay playsinline
+        style="width:100%;height:100%;background:#000"></video>
+    `;
+
+    const video = document.getElementById("video");
+
+    function loadStream(url) {
+        if (hls) hls.destroy();
+
+        if (!url || !url.trim()) return;
+
+        if (Hls.isSupported()) {
+            hls = new Hls({
+                lowLatencyMode: true,
+                maxBufferLength: 60
+            });
+            hls.loadSource(url);
+            hls.attachMedia(video);
+        } else {
+            video.src = url;
+        }
+
+        video.play().catch(()=>{});
+        lastTime = 0;
+        stallChecks = 0;
+    }
+
+    loadStream(list[index]);
+
+    const monitor = setInterval(() => {
+        if (video.readyState < 2) return;
+
+        if (video.currentTime === lastTime) stallChecks++;
+        else stallChecks = 0;
+
+        lastTime = video.currentTime;
+
+        if (stallChecks >= 3) {
+            index++;
+            stallChecks = 0;
+
+            if (index < list.length) loadStream(list[index]);
+            else {
+                clearInterval(monitor);
+                playerArea.innerHTML = `<span class="unavailable">Opção indisponível no momento</span>`;
+            }
+        }
+    }, 2000);
+}
+</script>
+
+</body>
+</html>
